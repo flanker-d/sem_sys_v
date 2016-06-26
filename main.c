@@ -17,11 +17,18 @@ int main(int argc, char *argv[])
 
   struct sembuf sem_ops[SEM_COUNT];
   bzero(&sem_ops, sizeof(struct sembuf) * SEM_COUNT);
-  for(int i = 0; i < SEM_COUNT; i++)
+  int i = 0;
+  for(i = 0; i < SEM_COUNT; i++)
   {
     sem_ops[i].sem_num = i;
     sem_ops[i].sem_op = i;
-    sem_ops[i].sem_flg = SEM_UNDO;
+    sem_ops[i].sem_flg = 0;
+  }
+  int res = semop(semid, sem_ops, SEM_COUNT);
+  if(res  == -1)
+  {
+    perror("Ошибка инициализации семафоров: ");
+    return -1;
   }
 
   return 0;
